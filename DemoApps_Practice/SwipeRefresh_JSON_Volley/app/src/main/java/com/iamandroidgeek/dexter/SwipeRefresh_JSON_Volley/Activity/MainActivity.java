@@ -2,12 +2,20 @@ package com.iamandroidgeek.dexter.SwipeRefresh_JSON_Volley.Activity;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Toast;
+
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -25,12 +33,15 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements MyAdapter.OnLoadMoreListener
-                ,SwipeRefreshLayout.OnRefreshListener{
+                ,SwipeRefreshLayout.OnRefreshListener, NavigationView.OnNavigationItemSelectedListener {
     private String TAG = "tag";
     private SwipeRefreshLayout swipeLayout;
 
     private ArrayList<Fish> fishList;
     private MyAdapter adapter;
+
+    DrawerLayout drawer;
+
 
 
 //    public String TAG = "handle";
@@ -48,6 +59,18 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnLoadM
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        drawer = findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
         fishList = new ArrayList<>();
         swipeLayout = findViewById(R.id.swiperefresh);
@@ -183,6 +206,15 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnLoadM
             }
         },2000);
 
+    }
+
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        Log.i(TAG,"navigation bar clicked..........");
+        drawer = findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 }
 
